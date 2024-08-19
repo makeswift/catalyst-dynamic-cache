@@ -7,7 +7,7 @@ async function getEntityId(request: NextRequest): Promise<string | null> {
   return null
 }
 
-// export const dynamic = 'force-static'
+export const dynamic = 'force-static'
 
 export async function GET(request: NextRequest): Promise<Response> {
   console.log(request.cookies.get('__prerender_bypass'))

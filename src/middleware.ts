@@ -16,14 +16,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   if (prerenderBypass == null) throw new Error('Prerender bypass cookie not found')
 
-  const headers = new Headers(request.headers)
-  const cookie =
-    headers
-      .get('cookie')
-      ?.split(';')
-      .map((cookie) => cookie.trim()) ?? []
+  const proxyRequest = new NextRequest(request)
 
-  headers.set('cookie', [...cookie, `__prerender_bypass=${prerenderBypass}`].join('; '))
+  proxyRequest.cookies.set('__prerender_bypass', prerenderBypass)
 
-  return NextResponse.next({ request: { headers } })
+  return NextResponse.next({ request: proxyRequest })
 }

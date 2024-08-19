@@ -1,3 +1,4 @@
+import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { NextRequest } from 'next/server'
 
@@ -10,7 +11,11 @@ async function getEntityId(request: NextRequest): Promise<string | null> {
 export const dynamic = 'force-static'
 
 export async function GET(request: NextRequest): Promise<Response> {
-  console.log(request.cookies.get('__prerender_bypass'))
+  console.log({
+    draftModeIsEnabled: draftMode().isEnabled,
+    requestHeaders: Object.fromEntries(request.headers.entries()),
+  })
+
   const entityId = await getEntityId(request)
 
   if (entityId == null) return notFound()

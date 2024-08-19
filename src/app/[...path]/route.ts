@@ -18,7 +18,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   const url = request.nextUrl.clone()
   url.pathname = `/entity/${entityId}`
 
-  const response = await fetch(url)
+  const response = await fetch(url, { headers: request.headers })
   const headers = new Headers(response.headers)
 
   if (headers.has('content-encoding')) {

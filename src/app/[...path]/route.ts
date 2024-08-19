@@ -1,4 +1,4 @@
-import { draftMode } from 'next/headers'
+import { cookies, draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { NextRequest } from 'next/server'
 
@@ -14,6 +14,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   console.log({
     draftModeIsEnabled: draftMode().isEnabled,
     requestHeaders: Object.fromEntries(request.headers.entries()),
+    cookies: Object.fromEntries(cookies()),
   })
 
   const entityId = await getEntityId(request)

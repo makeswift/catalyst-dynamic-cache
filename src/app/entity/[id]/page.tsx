@@ -1,7 +1,12 @@
-import { draftModeCookies } from '@/app/draftModeCookies'
+import { draftModeCookies, draftModeHeaders } from '@/app/draft-mode-headers'
+
+export function generateStaticParams() {
+  return []
+}
 
 export default function Page({ params }: { params: { id: string } }) {
   const cookies = draftModeCookies()?.getAll() ?? []
+  const headers = Array.from(draftModeHeaders() ?? [])
 
   return (
     <>
@@ -9,6 +14,8 @@ export default function Page({ params }: { params: { id: string } }) {
       <p>Rendered at {new Date().toISOString()}</p>
       <h2>Cookies</h2>
       <pre>{JSON.stringify(cookies, null, 2)}</pre>
+      <h2>Headers</h2>
+      <pre>{JSON.stringify(headers, null, 2)}</pre>
     </>
   )
 }

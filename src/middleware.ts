@@ -1,28 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function middleware(request: NextRequest): Promise<NextResponse> {
+export async function middleware(request: NextRequest): Promise<Response> {
   const dynamic = request.nextUrl.searchParams.has('dynamic')
 
   if (!dynamic) return NextResponse.next()
 
-  const draftModeResponse = await fetch(new URL('/api/draft', request.nextUrl.origin))
-  const prerenderBypass = draftModeResponse.headers
-    .getSetCookie()
-    .map((cookie) => cookie.split(';').at(0))
-    .filter((cookie) => cookie != null)
-    .map((cookie) => cookie.trim().split('='))
-    .find(([key, value]) => key === '__prerender_bypass')
-    ?.at(1)
+  const to = new URL(request.nextUrl.pathname + request.nextUrl.search, request.nextUrl.origin)
+  to.searchParams.delete('dynamic')
+  const proxyUrl = new URL('/api/draft/proxy', request.nextUrl.origin)
+  proxyUrl.searchParams.set('to', to.href)
+  const proxyHeaders = new Headers(request.headers)
+  proxyHeaders.delete('connection')
 
-  if (prerenderBypass == null) throw new Error('Prerender bypass cookie not found')
-
-  const headers = new Headers(request.headers)
-  const cookie = headers.get('cookie')
-  const prerenderBypassCookie = `__prerender_bypass=${prerenderBypass}`
-  headers.set(
-    'cookie',
-    cookie == null ? prerenderBypassCookie : `${cookie}; ${prerenderBypassCookie}`,
-  )
-
-  return NextResponse.next({ request: { headers } })
+  return fetch(proxyUrl, { headers: proxyHeaders })
 }

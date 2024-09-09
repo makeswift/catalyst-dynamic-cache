@@ -27,5 +27,8 @@ export async function GET(request: NextRequest): Promise<Response> {
     proxyResponseHeaders.delete('content-length')
   }
 
-  return new Response(proxyResponse.body, { headers: proxyResponseHeaders })
+  return new Response(proxyResponse.body, {
+    headers: proxyResponseHeaders,
+    status: proxyResponse.status,
+  })
 }

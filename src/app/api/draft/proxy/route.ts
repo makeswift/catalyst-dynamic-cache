@@ -15,8 +15,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   if (to == null) throw new Error('Missing "to" query parameter')
 
-  const proxyUrl = new URL(to)
-  const proxyRequest = new NextRequest(proxyUrl)
+  const proxyRequest = new NextRequest(to, request)
   proxyRequest.cookies.set('__prerender_bypass', prerenderBypass)
 
   const proxyResponse = await fetch(proxyRequest, proxyRequest)

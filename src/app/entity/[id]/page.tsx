@@ -1,10 +1,13 @@
 import { draftModeCookies, draftModeHeaders } from '@/app/draft-mode-headers'
+import { notFound } from 'next/navigation'
 
 export function generateStaticParams() {
   return []
 }
 
 export default function Page({ params }: { params: { id: string } }) {
+  if (params.id === 'not-found') notFound()
+
   const cookies = draftModeCookies()?.getAll() ?? []
   const headers = Array.from(draftModeHeaders() ?? [])
 

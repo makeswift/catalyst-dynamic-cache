@@ -2,8 +2,11 @@ import { NextRequest } from 'next/server'
 
 export const dynamic = 'force-static'
 
-export async function GET(request: NextRequest): Promise<Response> {
-  const entityId = 'foo' // get entity ID asynchronously here
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { path: string[] } },
+): Promise<Response> {
+  const entityId = params.path.join('/') // get entity ID asynchronously here
 
   const response = await fetch(new URL(`/entity/${entityId}`, request.nextUrl.origin), {
     headers: request.headers,

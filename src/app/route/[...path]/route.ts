@@ -9,7 +9,7 @@ export async function GET(
   const entityId = params.path.join('/') // get entity ID asynchronously here
 
   const response = await fetch(new URL(`/entity/${entityId}`, request.nextUrl.origin), {
-    headers: request.headers,
+    headers: new Headers(request.headers),
   })
   const headers = new Headers(response.headers)
 
